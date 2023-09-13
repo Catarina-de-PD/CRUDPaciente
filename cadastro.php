@@ -56,7 +56,7 @@
     <a href="index.html">Voltar à página inicial</a>
     <div class="centro">
         <h2>Cadastro de pacientes</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <label for="nome">Nome Completo:</label>
             <input type="text" id="nome" name="nome" required><br><br>
 
@@ -96,7 +96,7 @@
         $rg = $_POST["rg"];
         $idade = $_POST["idade"];
         $convenio = $_POST["convenio"];
-        $foto = $_POST["foto"];
+        $foto = $_FILES["foto"];
 
         if ((trim($cpf) == "") || (trim($nome) == "")) {
             echo "<span id='warning'>RA e nome são obrigatórios!</span>";
