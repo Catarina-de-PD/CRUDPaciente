@@ -48,7 +48,7 @@ function cadastrar($nome, $cpf, $rg, $idade, $convenio, $foto)
       $stmt->execute();
       echo "<span id='success'>Aluno Cadastrado!</span>";
     } else {
-      echo "<span id='error'>Ra já existente!</span>";
+      echo "<span id='error'>CPF já cadastrado!</span>";
     }
   } catch (PDOException $e) {
     echo 'Error: ' . $e->getMessage();
@@ -75,13 +75,12 @@ function consulta($cpf)
     //buscando dados
     $stmt->execute();
 
-    echo "<form><table border='1px'>";
+    echo "<form method='post'enctype='multipart/form-data'><table border='1px'>";
     echo "<tr><th></th><th>CPF</th><th>Nome</th><th>RG</th><th>Idade</th><th>Convenio</th><th>Foto</th></tr>";
 
     while ($row = $stmt->fetch()) {
       echo "<tr>";
-      echo "<td><input type='radio' name='cpf' 
-                     value='" . $row['cpf'] . "'>";
+      echo "<td><input type='radio' name='cpf' value='" . $row['cpf'] . "'>";
       echo "<td>" . $row['cpf'] . "</td>";
       echo "<td>" . $row['nome'] . "</td>";
       echo "<td>" . $row['rg'] . "</td>";
@@ -95,21 +94,26 @@ function consulta($cpf)
       }
       echo "</tr>";
     }
+    echo "</table><br> 
+      <button type='submit' formaction='excluir.php'>Excluir</button>
+      <button type='submit' formaction='editar.php'>Editar</button>
+    </form>";
 
-    echo "</table><br>
-            <button type='submit' name='op' value='delete'>Excluir Aluno</button>
-            <button type='submit' name='op' value='post'>Editar Aluno</button>
-          </form>";
 
-    if (isset($_GET["op"]) && $_GET["op"] == "delete") {
-      $cpf = $_GET['cpf'];
-      excluir($cpf);
-    }
   } catch (PDOException $e) {
     echo 'Error: ' . $e->getMessage();
   }
 
   $pdo = null;
+}
+
+function buscarEdicao($cpf)
+{
+    $pdo = conectarBD();
+    $stmt = $pdo->prepare('select * from paciente where cpf = :cpf');
+    $stmt->bindParam(':cpf', $cpf);
+    $stmt->execute();
+    return $stmt;
 }
 
 function excluir($cpf)
@@ -123,5 +127,34 @@ function excluir($cpf)
     echo $stmt->rowCount() . "Paciente excluído!";
   } catch (PDOException $e) {
     echo 'Error: ' . $e->getMessage();
+  }
+}
+
+function editar($cpf, $nome, $idade, $convenio, $foto){
+  $foto = $_FILES['foto'];
+  $nomeFoto = $foto['name'];
+  $tipoFoto = $foto['type'];
+  $tamanhoFoto = $foto['size'];
+  $pdo = conectarBD();
+  if ($nomeFoto != "") {
+      $fotoBinario = file_get_contents($foto['tmp_name']);
+      $stmt = $pdo->prepare('UPDATE paciente SET nome = :nome, convenio = :convenio, idade = :idade, foto = :foto  WHERE cpf = :cpf');
+      $stmt->bindParam(':nome', $nome);
+      $stmt->bindParam(':convenio', $convenio);
+      $stmt->bindParam(':cpf', $cpf);
+      $stmt->bindParam(':idade', $idade);
+      $stmt->bindParam(':foto', $fotoBinario);
+  } else {
+      $stmt = $pdo->prepare('UPDATE paciente SET nome = :nome, convenio = :convenio, idade = :idade WHERE cpf = :cpf');
+      $stmt->bindParam(':nome', $nome);
+      $stmt->bindParam(':convenio', $convenio);
+      $stmt->bindParam(':cpf', $cpf);
+      $stmt->bindParam(':idade', $idade);
+  }
+  try {
+      $stmt->execute();
+      echo "Os dados do paciente foram alterados!";
+  } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
   }
 }

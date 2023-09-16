@@ -69,7 +69,6 @@
         }
     </style>
 </head>
-
 <body>
     <a href="index.html">Voltar à página principal</a>
     <div class="centro" enctype="multipart/form-data">
