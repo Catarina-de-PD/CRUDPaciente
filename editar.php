@@ -52,7 +52,6 @@
 
     input[type="submit"]:hover {
         background-color: rgb(28, 29, 32);
-        ;
     }
 
     a {
@@ -61,7 +60,7 @@
 </style>
 
 <body>
-    <a href="index.html"></a> || <a href="consulta.php"></a>
+    <a href="index.html">Voltar à página inicial</a> | <a href="consulta.php">Voltar à página de consulta</a>
     <div class="centro">
         <h2>Edição de pacientes</h2>
         <?php
@@ -74,7 +73,6 @@ if (!isset($_POST["cpf"])) {
     $cpf = $_POST["cpf"];
 
     try {
-
         $stmt = buscarEdicao($cpf);
 
         $unimed = "";
@@ -94,7 +92,7 @@ if (!isset($_POST["cpf"])) {
                 $bradescoSaude = "selected";
             }
 
-            echo "<form method='post' action='editar.php' enctype='multipart/form-data'>\n
+            echo "<form method='post' enctype='multipart/form-data'>\n
             CPF:<br>\n
             <input type='text' size='10' name='cpf' value='$row[cpf]' readonly><br><br>\n
             Nome:<br>\n
@@ -120,8 +118,19 @@ if (!isset($_POST["cpf"])) {
                 <option value='HapVida' $hapvida>HapVida</option>
                 <option value='BradescoSaude' $bradescosaude>Bradesco Saúde</option>
              </select><br><br>
-             <input type='submit' value='Salvar Alterações'>
+             <input type='submit' name='salvar' value='Salvar Alterações'>
             </form>";
+
+            if(isset($_POST['salvar'])){
+                $cpf = $_POST['cpf'];
+                $nome = $_POST['nome'];
+                $idade = $_POST['idade'];
+                $convenio = $_POST['convenio'];
+                $foto = $_FILES['foto'];
+                editar($cpf, $nome, $idade, $convenio, $foto);
+
+            }        
+
             
         }
 

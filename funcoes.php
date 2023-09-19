@@ -157,4 +157,5 @@ function editar($cpf, $nome, $idade, $convenio, $foto){
   } catch (PDOException $e) {
       echo 'Error: ' . $e->getMessage();
   }
+  $pdo = null;
 }
