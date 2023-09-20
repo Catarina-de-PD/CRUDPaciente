@@ -61,10 +61,10 @@
             <input type="text" id="nome" name="nome" required><br><br>
 
             <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required><br><br>
+            <input type="number" id="cpf" name="cpf" required><br><br>
 
             <label for="rg">RG:</label>
-            <input type="text" id="rg" name="rg" required><br><br>
+            <input type="number" id="rg" name="rg" required><br><br>
 
             <label for="idade">Idade:</label>
             <input type="number" id="idade" name="idade" required><br><br>
@@ -83,25 +83,27 @@
 
             <input type="submit" value="Enviar">
         </form>
+
+        <?php
+            include("funcoes.php");
+
+            if ($_SERVER["REQUEST_METHOD"] === 'POST') {
+                $nome = $_POST["nome"];
+                $cpf = $_POST["cpf"];
+                $rg = $_POST["rg"];
+                $idade = $_POST["idade"];
+                $convenio = $_POST["convenio"];
+                $foto = $_FILES["foto"];
+
+                if ((trim($cpf) == "") || (trim($nome) == "")) {
+                    echo "<span id='warning'>RA e nome são obrigatórios!</span>";
+                } else {
+                    cadastrar($nome, $cpf, $rg, $idade, $convenio, $foto);
+                }
+            }
+        ?>
+
     </div>
 </body>
 </html>
 
-<?php
-    include("funcoes.php");
-
-    if ($_SERVER["REQUEST_METHOD"] === 'POST') {
-        $nome = $_POST["nome"];
-        $cpf = $_POST["cpf"];
-        $rg = $_POST["rg"];
-        $idade = $_POST["idade"];
-        $convenio = $_POST["convenio"];
-        $foto = $_FILES["foto"];
-
-        if ((trim($cpf) == "") || (trim($nome) == "")) {
-            echo "<span id='warning'>RA e nome são obrigatórios!</span>";
-        } else {
-            cadastrar($nome, $cpf, $rg, $idade, $convenio, $foto);
-        }
-    }
-?>

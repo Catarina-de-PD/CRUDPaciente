@@ -61,19 +61,17 @@
 <a href="index.html">Voltar à página principal</a>
     <div class="centro" enctype="multipart/form-data">
     <h2>Exclusão de pacientes</h2>
+    <?php
+        include("funcoes.php");
+
+        if (!isset($_POST["cpf"])) {
+            echo "Selecione o paciente a ser excluído!";
+        } else {
+            $cpf = $_POST["cpf"];
+            excluir($cpf);
+        }
+    ?>
     </div>
 </body>
 </html>
 
-<?php
-
-include("funcoes.php");
-
-if (!isset($_POST["cpf"])) {
-    echo "Selecione o paciente a ser excluído!";
-} else {
-    $cpf = $_POST["cpf"];
-    excluir($cpf);
-}
-
-?>

@@ -64,83 +64,83 @@
     <div class="centro">
         <h2>Edição de pacientes</h2>
         <?php
+        include("funcoes.php");
 
-include("funcoes.php");
-
-if (!isset($_POST["cpf"])) {
-    echo "Selecione o paciente a ser editado!";
-} else {
-    $cpf = $_POST["cpf"];
-
-    try {
-        $stmt = buscarEdicao($cpf);
-
-        $unimed = "";
-        $freigalvao = "";
-        $hapvida = "";
-        $bradescosaude = "";
-
-        while ($row = $stmt->fetch()) {
-            $foto = $row['foto'];
-            if ($row['convenio'] == "unimed") {
-                $unimed = "selected";
-            } else if ($row['convenio'] == "frei galvão") {
-                $freigalvao = "selected";
-            } else if ($row['convenio'] == "hapvida") {
-                $hapvida = "selected";
-            } else if ($row['convenio'] == "bradesco saúde") {
-                $bradescoSaude = "selected";
-            }
-
-            echo "<form method='post' enctype='multipart/form-data'>\n
-            CPF:<br>\n
-            <input type='text' size='10' name='cpf' value='$row[cpf]' readonly><br><br>\n
-            Nome:<br>\n
-            <input type='text' size='30' name='nome' value='$row[nome]'><br><br>\n
-            Idade:<br>\n
-            <input type='text' size='30' name='idade' value='$row[idade]'><br><br>\n
-            Foto:<br>";
-
-            if ($foto=="") {
-              echo "-<br><br>";
-            } else {
-              echo  "<img src='data:image;base64,". base64_encode($foto)."' width='50px' height='50px'><br><br>";
-            }
-
-            echo "
-             <input type='file' name='foto'><br><br>
-
-            Convenio:<br>
-            <select name='convenio'
-                <option></option>
-                 <option value='Unimed' $unimed>Unimed</option>
-                <option value='FreiGalvao' $freigalvao>FreiGalvao</option>
-                <option value='HapVida' $hapvida>HapVida</option>
-                <option value='BradescoSaude' $bradescosaude>Bradesco Saúde</option>
-             </select><br><br>
-             <input type='submit' name='salvar' value='Salvar Alterações'>
-            </form>";
+        if (!isset($_POST["cpf"])) {
+            echo "Selecione o paciente a ser editado!";
+        } else {
+            $cpf = $_POST["cpf"];
 
             if(isset($_POST['salvar'])){
                 $cpf = $_POST['cpf'];
+                $rg = $_POST['rg'];
                 $nome = $_POST['nome'];
                 $idade = $_POST['idade'];
                 $convenio = $_POST['convenio'];
                 $foto = $_FILES['foto'];
                 editar($cpf, $nome, $idade, $convenio, $foto);
+            }  
 
-            }        
+            try {
+                $stmt = buscarEdicao($cpf);
 
-            
+                $unimed = "";
+                $freigalvao = "";
+                $hapvida = "";
+                $bradescosaude = "";
+
+                while ($row = $stmt->fetch()) {
+                    $foto = $row['foto'];
+                    if ($row['convenio'] == "unimed") {
+                        $unimed = "selected";
+                    } else if ($row['convenio'] == "frei galvão") {
+                        $freigalvao = "selected";
+                    } else if ($row['convenio'] == "hapvida") {
+                        $hapvida = "selected";
+                    } else if ($row['convenio'] == "bradesco saúde") {
+                        $bradescoSaude = "selected";
+                    }
+
+                    echo "<form method='post' enctype='multipart/form-data'>\n
+                    CPF:<br>\n
+                    <input type='text' size='10' name='cpf' value='$row[cpf]' readonly><br><br>\n
+                    RG:<br>\n
+                    <input type='text' size='10' name='rg' value='$row[rg]' readonly><br><br>\n
+                    Nome:<br>\n
+                    <input type='text' size='30' name='nome' value='$row[nome]'><br><br>\n
+                    Idade:<br>\n
+                    <input type='text' size='30' name='idade' value='$row[idade]'><br><br>\n
+                    Foto:<br>";
+
+                    if ($foto=="") {
+                    echo "-<br><br>";
+                    } else {
+                    echo  "<img src='data:image;base64,". base64_encode($foto)."' width='50px' height='50px'><br><br>";
+                    }
+
+                    echo "
+                    <input type='file' name='foto'><br><br>
+
+                    Convenio:<br>
+                    <select name='convenio'
+                        <option></option>
+                        <option value='Unimed' $unimed>Unimed</option>
+                        <option value='FreiGalvao' $freigalvao>FreiGalvao</option>
+                        <option value='HapVida' $hapvida>HapVida</option>
+                        <option value='BradescoSaude' $bradescosaude>Bradesco Saúde</option>
+                    </select><br><br>
+                    <input type='submit' name='salvar' value='Salvar Alterações'>
+                    </form>"; 
+                    
+                }
+
+            } catch (PDOException $e) {
+                echo 'Error: ' . $e->getMessage();
+            }
+
         }
 
-    } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
-    }
-
-}
-
-?>
+        ?>
     </div>
 </body>
 </html>

@@ -46,7 +46,7 @@ function cadastrar($nome, $cpf, $rg, $idade, $convenio, $foto)
       $stmt->bindParam(':convenio', $convenio);
       $stmt->bindParam(':foto', $fotobinario);
       $stmt->execute();
-      echo "<span id='success'>Aluno Cadastrado!</span>";
+      echo "<span id='success'>Aluno Cadastrado com sucesso!</span>";
     } else {
       echo "<span id='error'>CPF já cadastrado!</span>";
     }
@@ -124,7 +124,7 @@ function excluir($cpf)
     $stmt->bindParam(':cpf', $cpf);
     $stmt->execute();
 
-    echo $stmt->rowCount() . "Paciente excluído!";
+    echo "Paciente excluído com sucesso!";
   } catch (PDOException $e) {
     echo 'Error: ' . $e->getMessage();
   }
@@ -153,7 +153,7 @@ function editar($cpf, $nome, $idade, $convenio, $foto){
   }
   try {
       $stmt->execute();
-      echo "Os dados do paciente foram alterados!";
+      echo "Os dados do paciente foram alterados com sucesso!";
   } catch (PDOException $e) {
       echo 'Error: ' . $e->getMessage();
   }
